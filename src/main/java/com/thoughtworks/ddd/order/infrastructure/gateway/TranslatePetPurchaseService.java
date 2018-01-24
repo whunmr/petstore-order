@@ -1,4 +1,4 @@
-package com.thoughtworks.ddd.order.infrastructure.service;
+package com.thoughtworks.ddd.order.infrastructure.gateway;
 
 import com.thoughtworks.ddd.order.domain.pet.PetPurchaseService;
 import com.thoughtworks.ddd.order.infrastructure.client.PetClient;
