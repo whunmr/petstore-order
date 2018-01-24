@@ -32,7 +32,7 @@ public class OrderApplicationService {
     }
 
     public void payOrder(Long orderId) {
-        Order order = orderRepository.findOne(orderId);
+        Order order = orderRepository.findBy(orderId);
         Payment payment = payOrderService.payOrder(order);
         paymentRepository.save(payment);
         order.paid();

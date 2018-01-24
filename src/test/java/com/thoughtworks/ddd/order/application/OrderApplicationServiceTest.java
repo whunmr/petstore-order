@@ -39,7 +39,7 @@ public class OrderApplicationServiceTest {
         Order order = new Order();
         order.setId(orderId);
 
-        when(orderRepository.findOne(orderId)).thenReturn(order);
+        when(orderRepository.findBy(orderId)).thenReturn(order);
         when(paymentService.payOrder(order)).thenReturn(new Payment(orderId, PaymentStatus.PAID));
 
         orderApplicationService.payOrder(orderId);

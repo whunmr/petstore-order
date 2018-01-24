@@ -17,6 +17,6 @@ public class OrderQueryService {
     }
 
     public Order queryOrder(@PathVariable("id") long id) {
-        return this.repository.findOne(id);
+        return this.repository.findBy(id);
     }
 }
