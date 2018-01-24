@@ -35,17 +35,7 @@ public class OrderApplicationService {
         Order order = orderRepository.findOne(orderId);
         Payment payment = payOrderService.payOrder(order);
         paymentRepository.save(payment);
-        order.completed();
+        order.paid();
         orderRepository.save(order);
     }
-
-    public void cancelOrder(Long orderId) {
-        Order order = orderRepository.findOne(orderId);
-        order.canceled();
-        Payment payment = paymentRepository.paymentOf(orderId);
-        payment.waitToRefund();
-        petPurchaseService.Return(order.getPet().getPetId());
-    }
-
-
 }

@@ -24,6 +24,8 @@ public class Order implements Entity<Long> {
     @Enumerated(STRING)
     private OrderStatus orderStatus = OrderStatus.NOT_COMPLETED;
 
+    private String category;
+
     @CreatedDate
     private ZonedDateTime createdDate = ZonedDateTime.now();
 
@@ -49,28 +51,12 @@ public class Order implements Entity<Long> {
         return customer;
     }
 
-    public void setCustomer(Customer customer) {
-        this.customer = customer;
-    }
-
     public Shop getShop() {
         return shop;
     }
 
-    public void setShop(Shop shop) {
-        this.shop = shop;
-    }
-
     public Pet getPet() {
         return pet;
-    }
-
-    public void setPet(Pet pet) {
-        this.pet = pet;
-    }
-
-    public OrderStatus getOrderStatus() {
-        return orderStatus;
     }
 
     @Override
@@ -78,11 +64,23 @@ public class Order implements Entity<Long> {
         return this.id.equals(otherId);
     }
 
-    public void completed() {
-        orderStatus = OrderStatus.COMPLETED;
+    public void paid() {
+        orderStatus = OrderStatus.PAID;
     }
 
-    public void canceled() {
-        orderStatus = OrderStatus.Cancled;
+    public OrderStatus getOrderStatus() {
+        return orderStatus;
+    }
+
+    public void setOrderStatus(OrderStatus status) {
+        orderStatus = status;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
+    }
+
+    public String getCategory() {
+        return category;
     }
 }

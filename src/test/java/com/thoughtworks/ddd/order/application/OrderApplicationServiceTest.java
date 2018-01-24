@@ -8,12 +8,10 @@ import com.thoughtworks.ddd.order.domain.payment.PaymentRepository;
 import com.thoughtworks.ddd.order.domain.payment.PaymentStatus;
 import com.thoughtworks.ddd.order.domain.payment.PayOrderService;
 import org.hamcrest.CustomMatcher;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import static org.mockito.Matchers.argThat;
@@ -37,7 +35,7 @@ public class OrderApplicationServiceTest {
 
     @Test
     public void should_be_able_to_pay_the_created_order() throws Exception {
-        long orderId = 123456L;
+        final long orderId = 123456L;
         Order order = new Order();
         order.setId(orderId);
 
@@ -58,7 +56,7 @@ public class OrderApplicationServiceTest {
             @Override
             public boolean matches(Object o) {
                 Order order = (Order) o;
-                return order.getOrderStatus() == OrderStatus.COMPLETED;
+                return order.getOrderStatus() == OrderStatus.PAID;
             }
         }));
     }

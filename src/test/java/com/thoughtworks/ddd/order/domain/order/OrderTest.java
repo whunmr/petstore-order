@@ -13,7 +13,7 @@ public class OrderTest {
     @Test
     public void should_change_order_status_to_completed() throws Exception {
         Order order = new Order();
-        order.completed();
-        assertThat(order.getOrderStatus()).isEqualTo(OrderStatus.COMPLETED);
+        order.paid();
+        assertThat(order.getOrderStatus()).isEqualTo(OrderStatus.PAID);
     }
 }
