@@ -10,14 +10,17 @@ import com.thoughtworks.ddd.order.domain.payment.PayOrderService;
 import org.hamcrest.CustomMatcher;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.mockito.runners.MockitoJUnitRunner;
 
 import static org.mockito.Matchers.argThat;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+@RunWith(MockitoJUnitRunner.class)
 public class OrderApplicationServiceTest {
     @Mock
     private PaymentRepository paymentRepository;
@@ -31,17 +34,13 @@ public class OrderApplicationServiceTest {
     @InjectMocks
     private OrderApplicationService orderApplicationService;
 
-    @Before
-    public void setUp() throws Exception {
-        MockitoAnnotations.initMocks(this);
-    }
-
 
     @Test
     public void should_be_able_to_pay_the_created_order() throws Exception {
         long orderId = 123456L;
         Order order = new Order();
         order.setId(orderId);
+
         when(orderRepository.findOne(orderId)).thenReturn(order);
         when(paymentService.payOrder(order)).thenReturn(new Payment(orderId, PaymentStatus.PAID));
 

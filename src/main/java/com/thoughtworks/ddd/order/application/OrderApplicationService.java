@@ -34,17 +34,13 @@ public class OrderApplicationService {
         Pet pet = orderCommand.getPet();
         petPurchaseService.lockPetOfOrder(pet.getPetId());
 
-        Order order = new Order(orderCommand.getCustomer(),
-                orderCommand.getShop(),
-                pet);
+        Order order = new Order(orderCommand.getCustomer(), orderCommand.getShop(), pet);
         this.orderRepository.save(order);
 
-        Payment payment = new Payment(order.getId(),
-                PaymentStatus.UNPAID);
+        Payment payment = new Payment(order.getId(), PaymentStatus.UNPAID);
         paymentRepository.save(payment);
         return order;
     }
-
 
     public void payOrder(Long orderId) {
         Order order = orderRepository.findOne(orderId);
