@@ -16,7 +16,7 @@ import org.springframework.stereotype.Service;
 public class OrderApplicationService {
     @Autowired private OrderRepository orderRepository;
     @Autowired private PetPurchaseService petPurchaseService;
-    @Autowired private PayOrderService userPayOrderService;
+    @Autowired private PayOrderService payOrderService;
     @Autowired private PaymentRepository paymentRepository;
 
     public Order bookPet(OrderDTO orderCommand) {
@@ -24,7 +24,7 @@ public class OrderApplicationService {
         petPurchaseService.lockPetOfOrder(pet.getPetId());
 
         Order order = new Order(orderCommand.getCustomer(), orderCommand.getShop(), pet);
-        this.orderRepository.save(order);
+        orderRepository.save(order);
 
         Payment payment = new Payment(order.getId(), PaymentStatus.UNPAID);
         paymentRepository.save(payment);
@@ -33,7 +33,7 @@ public class OrderApplicationService {
 
     public void payOrder(Long orderId) {
         Order order = orderRepository.findOne(orderId);
-        Payment payment = userPayOrderService.payOrder(order);
+        Payment payment = payOrderService.payOrder(order);
         paymentRepository.save(payment);
         order.completed();
         orderRepository.save(order);

@@ -1,11 +1,12 @@
 package com.thoughtworks.ddd.order.domain.payment;
 
+import com.thoughtworks.ddd.order.domain.common.DomainService;
 import com.thoughtworks.ddd.order.domain.order.Order;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class PayOrderService {
+public class PayOrderService implements DomainService {
     private PaymentRepository paymentRepository;
 
     @Autowired
