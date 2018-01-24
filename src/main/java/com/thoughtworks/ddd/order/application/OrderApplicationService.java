@@ -14,21 +14,10 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class OrderApplicationService {
-    private final OrderRepository orderRepository;
-    private final PetPurchaseService petPurchaseService;
-    private final PayOrderService userPayOrderService;
-    private final PaymentRepository paymentRepository;
-
-    @Autowired
-    public OrderApplicationService(OrderRepository orderRepository,
-                                   PetPurchaseService petPurchaseService,
-                                   PayOrderService userPayOrderService,
-                                   PaymentRepository paymentRepository) {
-        this.orderRepository = orderRepository;
-        this.petPurchaseService = petPurchaseService;
-        this.userPayOrderService = userPayOrderService;
-        this.paymentRepository = paymentRepository;
-    }
+    @Autowired private OrderRepository orderRepository;
+    @Autowired private PetPurchaseService petPurchaseService;
+    @Autowired private PayOrderService userPayOrderService;
+    @Autowired private PaymentRepository paymentRepository;
 
     public Order bookPet(OrderDTO orderCommand) {
         Pet pet = orderCommand.getPet();
