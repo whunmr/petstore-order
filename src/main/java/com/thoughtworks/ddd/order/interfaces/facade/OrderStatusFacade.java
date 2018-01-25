@@ -24,7 +24,7 @@ public class OrderStatusFacade extends HttpFacadeBaseClass {
         this.orderApplicationService = orderApplicationService;
     }
 
-    @PostMapping("/{id}/status/cancel")
+    @PostMapping("/{id}/status/tryCancel")
     @ResponseStatus(HttpStatus.CREATED)
     public final void createOrder(@PathVariable("id") final long id) {
         orderApplicationService.payOrder(id);

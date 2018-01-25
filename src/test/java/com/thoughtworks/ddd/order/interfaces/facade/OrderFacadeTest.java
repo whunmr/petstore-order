@@ -93,7 +93,7 @@ public class OrderFacadeTest extends APIBaseTest {
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated());
 
-        this.mockMvc.perform(post(location + "/status/cancel")
+        this.mockMvc.perform(post(location + "/status/tryCancel")
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated());
 

@@ -13,8 +13,6 @@ public class LegacyOrderApplicationService {
     @Autowired
     OrderRepositoryImpl orderRepository;
     @Autowired
-    MsgQueueDomainEventPublisher domainEventPublisher;
-    @Autowired
     private RedisCounter redisCounter;
     @Autowired
     private OrderService orderService;

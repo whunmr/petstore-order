@@ -24,18 +24,15 @@ public class OrderService {
     }
 
     public boolean cancelOrder(Order order, String cancellationReason) {
-        if (order.notAllowToCancel()) {
+        if (!order.tryCancel()){
             return false;
         }
-
-        order.cancel();
+        publishCancelOrderEvent(cancellationReason, order);
 
         Payment payment = this.paymentRepository.paymentOf(order.getId());
         payment.waitToRefund();
+
         this.petPurchaseService.Return(order.getPet().getPetId());
-
-        publishCancelOrderEvent(cancellationReason, order);
-
         return true;
     }
 }

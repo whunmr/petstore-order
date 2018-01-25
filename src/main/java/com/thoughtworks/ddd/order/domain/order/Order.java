@@ -98,7 +98,12 @@ public class Order implements Entity<Long> {
         return inNotAllowToCancelStatus();
     }
 
-    public void cancel() {
+    public boolean tryCancel() {
+        if (notAllowToCancel()) {
+            return false;
+        }
+
         orderStatus = OrderStatus.CANCELLED;
+        return true;
     }
 }
