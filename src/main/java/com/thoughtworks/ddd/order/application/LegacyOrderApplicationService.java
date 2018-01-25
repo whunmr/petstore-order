@@ -33,39 +33,41 @@ public class LegacyOrderApplicationService {
 
     public boolean cancelOrder(Long orderId, String cancellationReason) {
         Order order = orderRepository.findBy(orderId);
-        if (order != null) {
-
-            //业务政策：蚂蚁，鱼等生命力不强的动物无法取消
-            if (!"Fish".equals(order.getCategory()) && !"Ant".equals(order.getCategory())) {
-
-                //如果订单已经取消 或 已经关闭，则不能继续取消
-                if (order.getOrderStatus() != OrderStatus.CANCELLED && order.getOrderStatus() != OrderStatus.CLOSED) {
-
-                    order.setOrderStatus(OrderStatus.CANCELLED);
-
-                    Payment payment = paymentRepository.paymentOf(orderId);
-                    payment.waitToRefund();
-                    petPurchaseService.Return(order.getPet().getPetId());
-
-                    //进行退货计数更新, 最多尝试3次
-                    boolean updateCounterSucceeded = false;
-                    int i = 0;
-                    while (!updateCounterSucceeded && i++ < 3) {
-                        updateCounterSucceeded = redisCounter.increaseCancellationCounter(orderId, cancellationReason);
-                    }
-
-                    //发送domain event表示 订单取消成功
-                    OrderCancelled orderCancelled = new OrderCancelled();
-                    orderCancelled.setOrderId(orderId);
-                    orderCancelled.setReasonToCancel(cancellationReason);
-                    domainEventPublisher.publish(orderCancelled.toString());
-
-                    return true;
-                }
-            }
+        if (order == null) {
+            return false;
         }
 
-        return false;
+        //业务政策：蚂蚁，鱼等生命力不强的动物无法取消
+        if ("Fish".equals(order.getCategory()) || "Ant".equals(order.getCategory())) {
+            return false;
+        }
+
+        //如果订单已经取消 或 已经关闭，则不能继续取消
+        if (order.getOrderStatus() == OrderStatus.CANCELLED || order.getOrderStatus() == OrderStatus.CLOSED) {
+            return false;
+        }
+
+        order.setOrderStatus(OrderStatus.CANCELLED);
+
+        Payment payment = paymentRepository.paymentOf(orderId);
+        payment.waitToRefund();
+        petPurchaseService.Return(order.getPet().getPetId());
+
+        //进行退货计数更新, 最多尝试3次
+        boolean updateCounterSucceeded = false;
+        int i = 0;
+        while (!updateCounterSucceeded && i++ < 3) {
+            updateCounterSucceeded = redisCounter.increaseCancellationCounter(orderId, cancellationReason);
+        }
+
+        //发送domain event表示 订单取消成功
+        OrderCancelled orderCancelled = new OrderCancelled();
+        orderCancelled.setOrderId(orderId);
+        orderCancelled.setReasonToCancel(cancellationReason);
+        domainEventPublisher.publish(orderCancelled.toString());
+
+        return true;
+
     }
 }
 
