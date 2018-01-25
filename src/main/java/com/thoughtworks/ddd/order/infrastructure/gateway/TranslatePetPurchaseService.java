@@ -22,7 +22,7 @@ public class TranslatePetPurchaseService implements PetPurchaseService {
     }
 
     @Override
-    public void Return(String petId) {
+    public void forSale(String petId) {
         petClient.changeStatus(new PetStatusChanged(petId, PetStatus.ForSale));
     }
 }
