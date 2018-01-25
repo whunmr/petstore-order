@@ -20,10 +20,6 @@ public class LegacyOrderApplicationService {
     @Autowired
     OrderRepositoryImpl orderRepository;
     @Autowired
-    PaymentRepository paymentRepository;
-    @Autowired
-    PetPurchaseService petPurchaseService;
-    @Autowired
     MsgQueueDomainEventPublisher domainEventPublisher;
 
     @Autowired
@@ -37,11 +33,9 @@ public class LegacyOrderApplicationService {
             return false;
         }
 
-        if (order.notAllowToCancel()) {
+        if (!orderService.cancelOrder(order)) {
             return false;
         }
-
-        orderService.cancelOrder(order);
 
         //进行退货计数更新, 最多尝试3次
         redisCounter.count(orderId, cancellationReason, 3);

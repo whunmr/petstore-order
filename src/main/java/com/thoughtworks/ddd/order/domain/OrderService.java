@@ -17,11 +17,17 @@ public class OrderService {
     @Autowired
     private PetPurchaseService petPurchaseService;
 
-    public void cancelOrder(Order order) {
+    public boolean cancelOrder(Order order) {
+        if (order.notAllowToCancel()) {
+            return false;
+        }
+
         order.cancel();
 
         Payment payment = this.paymentRepository.paymentOf(order.getId());
         payment.waitToRefund();
         this.petPurchaseService.Return(order.getPet().getPetId());
+
+        return true;
     }
 }
