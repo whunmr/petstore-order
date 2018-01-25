@@ -2,7 +2,6 @@ package com.thoughtworks.ddd.order.application;
 
 import com.thoughtworks.ddd.order.domain.order.Order;
 import com.thoughtworks.ddd.order.domain.order.OrderCancelled;
-import com.thoughtworks.ddd.order.domain.order.OrderStatus;
 import com.thoughtworks.ddd.order.domain.payment.Payment;
 import com.thoughtworks.ddd.order.domain.payment.PaymentRepository;
 import com.thoughtworks.ddd.order.domain.pet.PetPurchaseService;
@@ -38,7 +37,7 @@ public class LegacyOrderApplicationService {
 
         if (order.notAllowToCancel()) return false;
 
-        order.setOrderStatus(OrderStatus.CANCELLED);
+        order.cancel();
 
         Payment payment = paymentRepository.paymentOf(orderId);
         payment.waitToRefund();

@@ -72,10 +72,6 @@ public class Order implements Entity<Long> {
         return orderStatus;
     }
 
-    public void setOrderStatus(OrderStatus status) {
-        orderStatus = status;
-    }
-
     public void setCategory(String category) {
         this.category = category;
     }
@@ -100,5 +96,9 @@ public class Order implements Entity<Long> {
 
         //如果订单已经取消 或 已经关闭，则不能继续取消
         return inNotAllowToCancelStatus();
+    }
+
+    public void cancel() {
+        orderStatus = OrderStatus.CANCELLED;
     }
 }
