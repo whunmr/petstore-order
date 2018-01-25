@@ -1,8 +1,8 @@
 package com.thoughtworks.ddd.order.application;
 
+import com.thoughtworks.ddd.order.domain.OrderService;
 import com.thoughtworks.ddd.order.domain.order.Order;
 import com.thoughtworks.ddd.order.domain.order.OrderCancelled;
-import com.thoughtworks.ddd.order.domain.payment.Payment;
 import com.thoughtworks.ddd.order.domain.payment.PaymentRepository;
 import com.thoughtworks.ddd.order.domain.pet.PetPurchaseService;
 import com.thoughtworks.ddd.order.infrastructure.messaging.MsgQueueDomainEventPublisher;
@@ -28,6 +28,8 @@ public class LegacyOrderApplicationService {
 
     @Autowired
     private RedisCounter redisCounter;
+    @Autowired
+    private OrderService orderService;
 
     public boolean cancelOrder(Long orderId, String cancellationReason) {
         Order order = orderRepository.findBy(orderId);
@@ -35,25 +37,18 @@ public class LegacyOrderApplicationService {
             return false;
         }
 
-        if (order.notAllowToCancel()) return false;
+        if (order.notAllowToCancel()) {
+            return false;
+        }
 
-        order.cancel();
-
-        Payment payment = paymentRepository.paymentOf(orderId);
-        payment.waitToRefund();
-        petPurchaseService.Return(order.getPet().getPetId());
+        orderService.cancelOrder(order);
 
         //进行退货计数更新, 最多尝试3次
-        boolean updateCounterSucceeded = false;
-        int i = 0;
-        while (!updateCounterSucceeded && i++ < 3) {
-            updateCounterSucceeded = redisCounter.increaseCancellationCounter(orderId, cancellationReason);
-        }
+        redisCounter.count(orderId, cancellationReason, 3);
 
         //发送domain event表示 订单取消成功
         OrderCancelled orderCancelled = new OrderCancelled(orderId, cancellationReason);
         domainEventPublisher.publish(orderCancelled.toString());
-
         return true;
     }
 
