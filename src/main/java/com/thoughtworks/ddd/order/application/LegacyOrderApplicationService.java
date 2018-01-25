@@ -61,9 +61,7 @@ public class LegacyOrderApplicationService {
         }
 
         //发送domain event表示 订单取消成功
-        OrderCancelled orderCancelled = new OrderCancelled();
-        orderCancelled.setOrderId(orderId);
-        orderCancelled.setReasonToCancel(cancellationReason);
+        OrderCancelled orderCancelled = new OrderCancelled(orderId, cancellationReason);
         domainEventPublisher.publish(orderCancelled.toString());
 
         return true;

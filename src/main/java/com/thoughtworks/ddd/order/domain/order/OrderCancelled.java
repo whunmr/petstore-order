@@ -5,14 +5,10 @@ import java.time.ZonedDateTime;
 public class OrderCancelled {
     private Long orderId;
     private String reasonToCancel;
-
     private ZonedDateTime at = ZonedDateTime.now();
 
-    public void setOrderId(Long orderId) {
+    public OrderCancelled(Long orderId, String reasonToCancel) {
         this.orderId = orderId;
-    }
-
-    public void setReasonToCancel(String reasonToCancel) {
         this.reasonToCancel = reasonToCancel;
     }
 }
