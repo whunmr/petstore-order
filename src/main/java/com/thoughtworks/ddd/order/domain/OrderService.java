@@ -13,9 +13,6 @@ import org.springframework.stereotype.Service;
 public class OrderService {
     @Autowired
     private PaymentRepository paymentRepository;
-    @Autowired
-    private PetPurchaseService petPurchaseService;
-
 
     public void publishCancelOrderEvent(String cancellationReason, Order order) {
         //发送domain event表示 订单取消成功
@@ -32,7 +29,6 @@ public class OrderService {
         Payment payment = this.paymentRepository.paymentOf(order.getId());
         payment.waitToRefund();
 
-        this.petPurchaseService.Return(order.getPet().getPetId());
         return true;
     }
 }
