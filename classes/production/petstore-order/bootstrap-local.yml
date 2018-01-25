@@ -1,9 +1,0 @@
-spring:
-  cloud:
-    consul:
-      enabled: false
-    bus:
-      enabled: false
-  pet:
-    ribbon:
-      listOfServers: localhost:9006
