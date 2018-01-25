@@ -83,4 +83,8 @@ public class Order implements Entity<Long> {
     public String getCategory() {
         return category;
     }
+
+    public boolean notAllowToCancel() {
+        return "Fish".equals(getCategory()) || "Ant".equals(getCategory());
+    }
 }

@@ -2,7 +2,6 @@ package com.thoughtworks.ddd.order.application;
 
 import com.thoughtworks.ddd.order.domain.order.Order;
 import com.thoughtworks.ddd.order.domain.order.OrderCancelled;
-import com.thoughtworks.ddd.order.domain.order.OrderRepository;
 import com.thoughtworks.ddd.order.domain.order.OrderStatus;
 import com.thoughtworks.ddd.order.domain.payment.Payment;
 import com.thoughtworks.ddd.order.domain.payment.PaymentRepository;
@@ -38,7 +37,7 @@ public class LegacyOrderApplicationService {
         }
 
         //业务政策：蚂蚁，鱼等生命力不强的动物无法取消
-        if ("Fish".equals(order.getCategory()) || "Ant".equals(order.getCategory())) {
+        if (order.notAllowToCancel()) {
             return false;
         }
 
@@ -65,7 +64,7 @@ public class LegacyOrderApplicationService {
         domainEventPublisher.publish(orderCancelled.toString());
 
         return true;
-
     }
+
 }
 
