@@ -84,7 +84,21 @@ public class Order implements Entity<Long> {
         return category;
     }
 
-    public boolean notAllowToCancel() {
+    public boolean specialCategories() {
         return "Fish".equals(getCategory()) || "Ant".equals(getCategory());
+    }
+
+    public boolean inNotAllowToCancelStatus() {
+        return getOrderStatus() == OrderStatus.CANCELLED || getOrderStatus() == OrderStatus.CLOSED;
+    }
+
+    public boolean notAllowToCancel() {
+        //业务政策：蚂蚁，鱼等生命力不强的动物无法取消
+        if (specialCategories()) {
+            return true;
+        }
+
+        //如果订单已经取消 或 已经关闭，则不能继续取消
+        return inNotAllowToCancelStatus();
     }
 }

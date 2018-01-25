@@ -36,15 +36,7 @@ public class LegacyOrderApplicationService {
             return false;
         }
 
-        //业务政策：蚂蚁，鱼等生命力不强的动物无法取消
-        if (order.notAllowToCancel()) {
-            return false;
-        }
-
-        //如果订单已经取消 或 已经关闭，则不能继续取消
-        if (order.getOrderStatus() == OrderStatus.CANCELLED || order.getOrderStatus() == OrderStatus.CLOSED) {
-            return false;
-        }
+        if (order.notAllowToCancel()) return false;
 
         order.setOrderStatus(OrderStatus.CANCELLED);
 
