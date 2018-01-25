@@ -2,9 +2,6 @@ package com.thoughtworks.ddd.order.application;
 
 import com.thoughtworks.ddd.order.domain.OrderService;
 import com.thoughtworks.ddd.order.domain.order.Order;
-import com.thoughtworks.ddd.order.domain.order.OrderCancelled;
-import com.thoughtworks.ddd.order.domain.payment.PaymentRepository;
-import com.thoughtworks.ddd.order.domain.pet.PetPurchaseService;
 import com.thoughtworks.ddd.order.infrastructure.messaging.MsgQueueDomainEventPublisher;
 import com.thoughtworks.ddd.order.infrastructure.persistence.OrderRepositoryImpl;
 import com.thoughtworks.ddd.order.infrastructure.persistence.RedisCounter;
@@ -13,15 +10,10 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class LegacyOrderApplicationService {
-    // remote service invoke
-    // domain service
-    // object factory
-
     @Autowired
     OrderRepositoryImpl orderRepository;
     @Autowired
     MsgQueueDomainEventPublisher domainEventPublisher;
-
     @Autowired
     private RedisCounter redisCounter;
     @Autowired
@@ -33,16 +25,12 @@ public class LegacyOrderApplicationService {
             return false;
         }
 
-        if (!orderService.cancelOrder(order)) {
+        if (orderService.cancelOrder(order, cancellationReason))
             return false;
-        }
 
         //进行退货计数更新, 最多尝试3次
         redisCounter.count(orderId, cancellationReason, 3);
 
-        //发送domain event表示 订单取消成功
-        OrderCancelled orderCancelled = new OrderCancelled(orderId, cancellationReason);
-        domainEventPublisher.publish(orderCancelled.toString());
         return true;
     }
 
