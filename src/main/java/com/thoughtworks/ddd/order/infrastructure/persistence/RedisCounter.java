@@ -9,7 +9,7 @@ public class RedisCounter implements CancellationCounter {
         return true;
     }
 
-    public void increaseCancelCount(Long orderId, String cancellationReason, int retryCounter) {
+    public void increase(Long orderId, String cancellationReason, int retryCounter) {
         System.out.println("retry count:" + retryCounter);
         boolean updateCounterSucceeded = false;
         int i = 0;

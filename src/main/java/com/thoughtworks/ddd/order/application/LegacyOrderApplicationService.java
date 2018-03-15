@@ -34,7 +34,7 @@ public class LegacyOrderApplicationService {
         petPurchaseService.forSale(order.getPet().getPetId());
 
         //进行退货计数更新, 最多尝试3次
-        cancellationCounter.increaseCancelCount(orderId, cancellationReason, 3);
+        cancellationCounter.increase(orderId, cancellationReason, 3);
 
         return true;
     }
